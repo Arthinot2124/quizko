@@ -61,7 +61,7 @@ class AuthenticationSourceImpl implements AuthenticationSource {
   Future<UserModel> authenticate(String email, String password) async {
     try {
       http.Response response = await httpClient
-          .post(Uri.http(ApiConfig.baseUrl, '/api/login'), body: {
+          .post(Uri.http(ApiConfig.baseUrl, '/guest/login'), body: {
         'email': email,
         'password': password,
       });

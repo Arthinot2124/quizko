@@ -169,8 +169,8 @@ class Header extends StatelessWidget {
                                         .textTheme
                                         .bodySmall
                                         ?.copyWith(
-                                      color: AppColor.purple3,
-                                    ),
+                                          color: AppColor.purple3,
+                                        ),
                                   ),
                                   FractionallySizedBox(
                                     widthFactor: 1,
@@ -217,17 +217,17 @@ class Header extends StatelessWidget {
   }
 
   void _onTapped(BuildContext context) {
-    if(interview != null) {
+    if (interview != null) {
       final candidateId =
           (context.read<AuthenticationBloc>().state as AuthenticatedState)
               .currentUser
               .candidateId;
       context.read<InterviewBloc>().add(
-        FetchInterviewCorrectionEvent(
-          candidateId: candidateId,
-          interviewId: interview!.id,
-        ),
-      );
+            FetchInterviewCorrectionEvent(
+              candidateId: candidateId,
+              interviewId: interview!.id,
+            ),
+          );
       context.push('${Routes.userAnswer}?interview=${interview!.id}');
     }
   }

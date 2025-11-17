@@ -17,16 +17,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser =
-        (context.watch<AuthenticationBloc>().state as AuthenticatedState)
-            .currentUser;
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, authState) {
+        // Vérifier que l'utilisateur est bien authentifié
+        if (authState is! AuthenticatedState) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return BlocBuilder<InterviewBloc, InterviewState>(
-        builder: (context, state) {
-      if (state is interview_bloc.LoadingState || state is interview_bloc.InitialState) {
+        final currentUser = authState.currentUser;
+
+        return BlocBuilder<InterviewBloc, InterviewState>(
+            builder: (context, state) {
+      if (state is interview_bloc.LoadingState ||
+          state is interview_bloc.InitialState) {
         return const Center(child: CircularProgressIndicator());
       } else if (state is interview_bloc.InterviewsLoaded) {
-        if(state.interviews.isEmpty) {
+        if (state.interviews.isEmpty) {
           return const NoQuizzesScreen();
         }
 
@@ -38,7 +44,9 @@ class HomeScreen extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundImage: currentUser.gender == 'masculine'? const AssetImage('assets/images/male.jpg') : const AssetImage('assets/images/female.jpg'),
+                backgroundImage: currentUser.gender == 'masculine'
+                    ? const AssetImage('assets/images/male.jpg')
+                    : const AssetImage('assets/images/female.jpg'),
                 backgroundColor: Colors.red,
                 radius: 15.0,
               ),
@@ -68,7 +76,10 @@ class HomeScreen extends StatelessWidget {
             constraints: const BoxConstraints.expand(),
             child: Column(
               children: [
-                Expanded(child: Header(interview: state.interviews.firstOrNull,)),
+                Expanded(
+                    child: Header(
+                  interview: state.interviews.firstOrNull,
+                )),
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -82,8 +93,8 @@ class HomeScreen extends StatelessWidget {
                                   .textTheme
                                   .titleMedium
                                   ?.copyWith(
-                                color: Colors.black,
-                              ),
+                                    color: Colors.black,
+                                  ),
                             ),
                             const Spacer(),
                             TextButton(
@@ -96,10 +107,10 @@ class HomeScreen extends StatelessWidget {
                                         .textTheme
                                         .bodyMedium
                                         ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary,
-                                    ),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                   const Gap(10),
                                   Icon(
@@ -115,9 +126,13 @@ class HomeScreen extends StatelessWidget {
                         Expanded(
                           child: ListView.separated(
                             padding: const EdgeInsets.all(0),
-                            itemCount: state.interviews.length > 3 ? 5 : state.interviews.length,
+                            itemCount: state.interviews.length > 3
+                                ? 5
+                                : state.interviews.length,
                             separatorBuilder: (context, index) => const Gap(10),
-                            itemBuilder: (context, index) => Quiz(interview: state.interviews[index],),
+                            itemBuilder: (context, index) => Quiz(
+                              interview: state.interviews[index],
+                            ),
                           ),
                         ),
                       ],
@@ -131,6 +146,8 @@ class HomeScreen extends StatelessWidget {
       } else {
         return const SizedBox();
       }
-    });
+        });
+      },
+    );
   }
 }
